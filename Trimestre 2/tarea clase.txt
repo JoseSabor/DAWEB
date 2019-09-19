@@ -1,0 +1,4 @@
+observar peticiones para cuenta y contraseña correcta e incorrecta
+
+evitar que el navegador envie automaticamente (Recuerde) el usuario y contraseña usado en la ultima "sesion" de acceso a la informacion del servidor
+firefox --> preferencias--> Privacidad y seguridad --> historial--> personalizada --> Limpiar Sesiones Activas

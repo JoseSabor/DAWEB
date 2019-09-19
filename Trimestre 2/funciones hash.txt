@@ -1,0 +1,14 @@
+1)es determinista: Un mismo mensaje siempre resulta en el mismo hash
+2)La computacion del valor hash es rapida para cualquier mensaje
+3)es inviable generar un mensaje a partir de su valor hash
+4) un pequeño cambio en un mensaje deberia cambiar el valor hash de tal manera que el nuevo valor no parezca que tenga correlacion con el valor hash antiguo
+5) es inviable encontrar dos mensajes diferentes con el mismo valor de hash
+Funcionalidades OpenSSL:
+Creacion y administracion de claves privadas, claves publicas y parametros
+operaciones criptograficas de clave publica
+Creacion de certificados x590 CSR y CRL
+calculo de resumen de mensajes
+encriptacion y desencriptacion
+pruebas SSL/TLS cliente servidor
+gestion de S/mime encriptado o correo encriptado
+peticion de marcas horarias, generacion y verificacion

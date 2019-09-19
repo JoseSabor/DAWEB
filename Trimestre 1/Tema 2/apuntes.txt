@@ -1,0 +1,394 @@
+RFC 959
+FTP:
+control connection
+
+         The communication path between the USER-PI and SERVER-PI for
+         the exchange of commands and replies.  This connection follows
+         the Telnet Protocol.
+
+DTP
+
+        The data transfer process establishes and manages the data
+        connection.  The DTP can be passive or active.
+
+End-of-Line
+
+         The end-of-line sequence defines the separation of printing
+         lines.  The sequence is Carriage Return, followed by Line Feed. (CR + LF)
+EOF
+
+         The end-of-file condition that defines the end of a file being
+         transferred.
+EOR
+
+         The end-of-record condition that defines the end of a record
+         being transferre
+
+FTP commands
+
+         A set of commands that comprise the control information flowing
+         from the user-FTP to the server-FTP process. (va a traves de la conexion de control)
+
+mode
+
+         The mode in which data is to be transferred via the data
+         connection.  The mode defines the data format during transfer
+         including EOR and EOF.  The transfer modes defined in FTP are
+         described in the Section on Transmission Modes.
+NVT
+
+         The Network Virtual Terminal as defined in the Telnet Protocol.
+
+
+
+NVFS
+
+         The Network Virtual File System.  A concept which defines a
+         standard network file system with standard commands and
+         pathname conventions.
+
+page
+
+         A file may be structured as a set of independent parts called
+         pages.  FTP supports the transmission of discontinuous files as
+         independent indexed pages.
+
+pathname
+
+         Pathname is defined to be the character string which must be
+         input to a file system by a user in order to identify a file.
+         Pathname normally contains device and/or directory names, and
+         file name specification.  FTP does not yet specify a standard
+         pathname convention.  Each user must follow the file naming
+         conventions of the file systems involved in the transfer.
+
+PI
+
+         The protocol interpreter.  The user and server sides of the
+         protocol have distinct roles implemented in a user-PI and a
+         server-PI.
+record
+
+         A sequential file may be structured as a number of contiguous
+         parts called records.  Record structures are supported by FTP
+         but a file need not have record structure.
+
+reply
+
+         A reply is an acknowledgment (positive or negative) sent from
+         server to user via the control connection in response to FTP
+         commands.  The general form of a reply is a completion code
+         (including error codes) followed by a text string.  The codes
+         are for use by programs and the text is usually intended for
+         human users.
+
+server-DTP
+
+         The data transfer process, in its normal "active" state,
+         establishes the data connection with the "listening" data port.
+         It sets up parameters for transfer and storage, and transfers
+         data on command from its PI.  The DTP can be placed in a
+         "passive" state to listen for, rather than initiate a
+         connection on the data port.
+
+type
+
+         The data representation type used for data transfer and
+         storage.  Type implies certain transformations between the time
+         of data storage and data transfer.  The representation types
+         defined in FTP are described in the Section on Establishing
+         Data Connections.
+
+user
+
+         A person or a process on behalf of a person wishing to obtain
+         file transfer service.  The human user may interact directly
+         with a server-FTP process, but use of a user-FTP process is
+         preferred since the protocol design is weighted towards
+         automata.
+
+user-DTP
+
+         The data transfer process "listens" on the data port for a
+         connection from a server-FTP process.  If two servers are
+         transferring data between them, the user-DTP is inactive.
+         (y en el caso de estado pasivo del servidor, realiza la
+         conexion al servidor dtp por el puerto de datos.)
+
+user-FTP process
+
+         A set of functions including a protocol interpreter, a data
+         transfer process and a user interface which together perform
+         the function of file transfer in cooperation with one or more
+         server-FTP processes.  The user interface allows a local
+         language to be used in the command-reply dialogue with the
+         user.
+
+user-PI
+
+         The user protocol interpreter initiates the control connection
+         from its port U to the server-FTP process, initiates FTP
+         commands, and governs the user-DTP if that process is part of
+         the file transfer.
+
+THE FTP MODEL
+
+         With the above definitions in mind, the following model (shown in
+         Figure 1) may be diagrammed for an FTP service.
+
+                                               -------------
+                                               |/---------\|
+                                               ||   User  ||    --------
+                                               ||Interface|<--->| User |
+                                               |\----^----/|    --------
+                     ----------                |     |     |
+                     |/------\|  FTP Commands  |/----V----\|
+                     ||Server|<---------------->|   User  ||
+                     ||  PI  ||   FTP Replies  ||    PI   ||
+                     |\--^---/|                |\----^----/|
+                     |   |    |                |     |     |
+         --------    |/--V---\|      Data      |/----V----\|    --------
+         | File |<--->|Server|<---------------->|  User   |<--->| File |
+         |System|    || DTP  ||   Connection   ||   DTP   ||    |System|
+         --------    |\------/|                |\---------/|    --------
+                     ----------                -------------
+
+                     Server-FTP                   USER-FTP
+
+         NOTES: 1. The data connection may be used in either direction.
+         2. The data connection need not exist all of the time.
+
+
+
+ACCESS CONTROL COMMANDS
+
+
+        USER NAME (USER)
+        PASSWORD (PASS)
+        ACCOUNT (ACCT)
+        CHANGE WORKING DIRECTORY (CWD)
+        CHANGE TO PARENT DIRECTORY (CDUP)
+        REINIZIALIZATE (REIN)
+        LOGOUT (QUIT)
+
+TRANSFER PARAMETER COMMANDS
+
+         DATA PORT (PORT)
+                  (PORT XXX,XXX,XXX,XXX,p1,p2) (XXX=Direccion ip)
+
+         PASSIVE (PASV)
+         This command requests the server-DTP to "listen" on a data
+         port (which is not its default data port) and to wait for a
+         connection rather than initiate one upon receipt of a
+         transfer command.  The response to this command includes the
+         host and port address this server is listening on.
+
+         REPRESENTATION TYPE (TYPE)
+
+            The argument specifies the representation type as described
+            in the Section on Data Representation and Storage.  Several
+            types take a second parameter.  The first parameter is
+            denoted by a single Telnet character, as is the second
+            Format parameter for ASCII and EBCDIC; the second parameter
+            for local byte is a decimal integer to indicate Bytesize.
+            The parameters are separated by a <SP> (Space, ASCII code
+            32).
+
+            The following codes are assigned for type:
+
+                         \    /
+               A - ASCII |    | N - Non-print
+                         |-><-| T - Telnet format effectors
+               E - EBCDIC|    | C - Carriage Control (ASA)
+                         /    \
+               I - Image
+
+               L <byte size> - Local byte Byte size
+
+
+FTP SERVICE COMMANDS
+
+
+         RETRIEVE (RETR)
+
+            This command causes the server-DTP to transfer a copy of the
+            file, specified in the pathname, to the server- or user-DTP
+            at the other end of the data connection.  The status and
+            contents of the file at the server site shall be unaffected.
+
+         STORE (STOR)
+
+            This command causes the server-DTP to accept the data
+            transferred via the data connection and to store the data as
+            a file at the server site.  If the file specified in the
+            pathname exists at the server site, then its contents shall
+            be replaced by the data being transferred.  A new file is
+            created at the server site if the file specified in the
+            pathname does not already exist.
+
+         STORE UNIQUE (STOU)
+
+            This command behaves like STOR except that the resultant
+            file is to be created in the current directory under a name
+            unique to that directory.  The 250 Transfer Started response
+            must include the name generated. (para crear ficheros
+            temporales, ya que te interesan que sean unicos.)
+
+         APPEND (with create) (APPE)
+
+            This command causes the server-DTP to accept the data
+            transferred via the data connection and to store the data in
+            a file at the server site.  If the file specified in the
+            pathname exists at the server site, then the data shall be
+            appended to that file; otherwise the file specified in the
+            pathname shall be created at the server site. (fichero log)
+
+           RESTART (REST)
+
+            The argument field represents the server marker at which
+            file transfer is to be restarted.  This command does not
+            cause file transfer but skips over the file to the specified
+            data checkpoint.  This command shall be immediately followed               by the appropriate FTP service command which shall cause
+            file transfer to resume.
+            El parametro del comando rest representa un marcador en el servidor
+            en el cual la transferencia del fichero debe ser reiniciada.
+            Este comando no provoca transferencia de fichero sino que
+            mueve el marcador del fichero al punto especificado.
+            Este comando debe ser seguido inmediatamente por un comando de
+            servicios FTP el cual provocará que la transferencia del fichero
+            continue en el punto indicado.
+
+
+           RENAME FROM (RNFR)
+
+            This command specifies the old pathname of the file which is
+            to be renamed.  This command must be immediately followed by
+            a RNTO command specifying the new file pathname.
+
+         RENAME TO (RNTO)
+
+            This command specifies the new pathname of the file
+            specified in the immediately preceding "rename from"
+            command.  Together the two commands cause a file to be
+            renamed.
+
+         ABORT (ABOR)
+
+            This command tells the server to abort the previous FTP
+            service command and any associated transfer of data.  The
+            abort command may require "special action", as discussed in
+            the Section on FTP Commands, to force recognition by the
+            server.  No action is to be taken if the previous command
+            has been completed (including data transfer).  The control
+            connection is not to be closed by the server, but the data
+            connection must be closed. (si hay exito 226, si falla 426)
+
+         DELETE (DELE)
+
+            This command causes the file specified in the pathname to be
+            deleted at the server site.  If an extra level of protection
+            is desired (such as the query, "Do you really wish to
+            delete?"), it should be provided by the user-FTP process.
+
+         REMOVE DIRECTORY (RMD)
+
+            This command causes the directory specified in the pathname
+            to be removed as a directory (if the pathname is absolute)
+            or as a subdirectory of the current working directory (if
+            the pathname is relative).
+
+         MAKE DIRECTORY (MKD)
+
+            This command causes the directory specified in the pathname
+            to be created as a directory (if the pathname is absolute)
+            or as a subdirectory of the current working directory (if
+            the pathname is relative)
+
+          PRINT WORKING DIRECTORY (PWD)
+
+            This command causes the name of the current working
+            directory to be returned in the reply.
+
+
+
+         LIST (LIST)
+
+            This command causes a list to be sent from the server to the
+            passive DTP.  If the pathname specifies a directory or other
+            group of files, the server should transfer a list of files
+            in the specified directory.  If the pathname specifies a
+            file then the server should send current information on the
+            file.  A null argument implies the user's current working or
+            default directory.  The data transfer is over the data
+            connection in type ASCII or type EBCDIC.  (The user must
+            ensure that the TYPE is appropriately ASCII or EBCDIC).
+            Since the information on a file may vary widely from system
+            to system, this information may be hard to use automatically
+            in a program, but may be quite useful to a human user.
+            (Este comando provoca que el servidor envie el contenido del
+            directorio al proceso DTP pasivo. Si la ruta especificada
+            es un directorio, el servidor debe enviar una lista de los
+            ficheros que hay en ese directorio.
+            Si la ruta especifica un fichero, entonces el servidor debe
+            enviar informacion sobre ese fichero. Si no se especifica
+            ruta se usa el directorio actual de trabajo.
+            La transferencia de datos se realiza usando la conexion de
+            datos con el tipo ASCII. El usuario DEBE asegurar que el
+            tipo (TYPE) es ASCII)
+
+
+         SITE PARAMETERS (SITE)
+
+            This command is used by the server to provide services
+            specific to his system that are essential to file transfer
+            but not sufficiently universal to be included as commands in
+            the protocol.  The nature of these services and the
+            specification of their syntax can be stated in a reply to
+            the HELP SITE command.
+
+         SYSTEM (SYST)
+
+            This command is used to find out the type of operating
+            system at the server.
+
+         STATUS (STAT)
+
+            Envia informacion de estado, se envia por la conexion de
+            control. Puede ser usado mientras una transferencia de
+            ficheros.
+
+
+         HELP (HELP)
+
+            This command shall cause the server to send helpful
+            information regarding its implementation status over the
+            control connection to the user.  The command may take an
+            argument (e.g., any command name) and return more specific
+            information as a response.  The reply is type 211 or 214.
+            It is suggested that HELP be allowed before entering a USER
+            command. The server may use this reply to specify
+            site-dependent parameters, e.g., in response to HELP SITE.
+
+         NOOP (NOOP)
+
+            This command does not affect any parameters or previously
+            entered commands. It specifies no action other than that the
+            server send an OK reply. (Saber si el servidor esta activo
+            o reiniciar el temporizador de desconexion automatica)
+
+
+
+FTP REPLIES
+
+         200 Command okay.
+         500 Syntax error, command unrecognized.
+         This may include errors such as command line too long.
+         501 Syntax error in parameters or arguments.
+         202 Command not implemented, superfluous at this site.
+         502 Command not implemented.
+         503 Bad sequence of commands.
+         504 Command not implemented for that parameter.
+
+para ver puerto (netstat -a -n -o | grep ":(puerto)")
+activo y pasivo ftp
+ver en http://slacksite.com/other/ftp.html
